@@ -1,10 +1,12 @@
+[TOC]
+
 ### 테스트환경
 
 OS : CentOS-7.3-64
 
 
 
-## 1.jdk 설치
+# jdk 설치
 
 jdk는 고객사에서 license를 보유한 정식 버전으로 1.7 이상 설치를 권장한다. (리눅스에서 배포되는 openJDK로는 오류 발생)
 
@@ -12,7 +14,7 @@ jdk는 고객사에서 license를 보유한 정식 버전으로 1.7 이상 설�
 
 
 
-### 설치 경로 설정
+### 1.설치 경로 설정
 
 jdk image.zip 파일을 압축해제 후 로컬경로로 이동한다.
 
@@ -22,7 +24,7 @@ mv openjdk_1.7.0-u80/ /usr/local/lib/openjdk_1.7.0-u80
 
 
 
-### 환경변수 설정
+### 2.환경변수 설정
 
 linux 설정파일에 환경변수 추가
 
@@ -51,7 +53,7 @@ which java
 
 
 
-### 심볼릭링크(명령어) 생성
+### 3.심볼릭링크(명령어) 생성
 
 java, javac, javaws 명령어 등록
 
@@ -72,13 +74,13 @@ Java -version
 
 
 
-## 2.SBMS 설치
+# SBMS 설치
 
 %SBMS_HOME%(SBMS_DTI) 설치는 windows와 동일하며 윈도우 서비스 대신 sh파일을 실행해서 프로세스를 등록한다.
 
 
 
-### 쉘 스크립트 생성
+### 1.쉘 스크립트 생성
 
 run.sh
 
@@ -108,7 +110,7 @@ java -cp .:./app/lib -Djava.library.path=./lib -DSBMS_HOME=/root/smartbill/SBMS_
 
 
 
-### 실행/종료
+### 2.실행/종료
 
 ```cmd
 sh run.sh

@@ -167,11 +167,13 @@ ex. keytool -delete -alias root -keystore c:\keystore\smartbill.test.com.jks
 
 %SBMS_HOME%\conf\sbms.properties 설정파일에 아래 tls속성을 추가한 후 서비스를 재시작하면 tls가 적용된다.
 
+설정파일 변경 전에 세팅이 완료된 keystore파일을 %SBMS_HOME%\keystore\ 경로로 이동한다.
+
 ```properties
 #tls 사용여부
 sbms.tls=true
 #keysotre 파일경로
-sbms.tls.keystore.path=c:\keystore\smartbill.test.com.jks
+sbms.tls.keystore.path=\\keystore\\smartbill.test.com.jks
 #keystore 비밀번호
 sbms.tls.keystore.password=abcd1234
 #인증서 비밀번호

@@ -36,7 +36,7 @@ ex. D:\smartbill\SBMS_DTI
 
 ### 소스 파일
 
-최신버전의 소스 파일(dti-1.16.14.war, manager-1.4.33.war)을 %SBMS_HOME%\app\ 경로로 이동
+최신버전의 소스 파일(ex. dti-1.16.14.war, manager-1.4.33.war)을 %SBMS_HOME%\app\ 경로로 이동
 
 
 
@@ -50,7 +50,7 @@ ex. D:\smartbill\SBMS_DTI
 
 ### 설정 파일
 
-%SBMS_HOME%\conf\sbms.properties
+**%SBMS_HOME%\conf\sbms.properties**
 
 ```properties
 sbms.system.name=SBMS
@@ -101,7 +101,7 @@ sbms.update.server.user.pwd=1Crm8LBRgjMCRmFbvv7YwA==
 
 
 
-%SBMS_HOME%\conf\adapter\dti.datasource.default.xml
+**%SBMS_HOME%\conf\adapter\dti.datasource.default.xml**
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -116,14 +116,25 @@ sbms.update.server.user.pwd=1Crm8LBRgjMCRmFbvv7YwA==
     <!-- Data Source ( SB_DTI )-->
     <bean id="dataSourceDTI-default" class="org.apache.commons.dbcp2.BasicDataSource">
         <property name="driverClassName" value="net.sourceforge.jtds.jdbc.Driver"/>
+        <!--property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/-->
+        <!--property name="driverClassName" value="com.mysql.jdbc.Driver"/-->
+        <!--property name="driverClassName" value="com.tmax.tibero.jdbc.TbDriver"/-->
         <property name="url" value="jdbc:jtds:sqlserver://49.50.165.211:1433;databaseName=dti"/>
+        <!--property name="url" value="jdbc:oracle:thin:@//localhost:1521/xe"/-->
+        <!--property name="url" value="jdbc:mysql://localhost/n_dti"/-->
+        <!--property name="url" value="jdbc:tibero:thin:@192.168.100.11:8629:tibero"/-->
         <property name="username" value="new_dti"/>
         <property name="password" value="a1234567"/>
         <property value="3" name="initialSize"/>
         <property value="3" name="maxIdle"/>
+        <!--oracle, tibero에서는 삭제-->
         <property value="1" name="defaultTransactionIsolation"/>
+        <!--/oracle, tibero에서는 삭제-->
         <property value="true" name="defaultAutoCommit"/>
+        <!--mssql, mysql-->
         <property value="select 1" name="validationQuery"/>
+        <!--oracle, tibero-->
+        <!--property value="select 1 from dual" name="validationQuery"/-->
     </bean>
 
     <!-- Transaction Manager ( Datasource : SB_DTI ) -->
@@ -138,6 +149,9 @@ sbms.update.server.user.pwd=1Crm8LBRgjMCRmFbvv7YwA==
         <property name="configLocation" value="WEB-INF/mybatis-config.xml"/>
         <property name="typeAliasesPackage" value="com.bizon.sbms.server.dti.common.dto"/>
         <property name="mapperLocations" value="classpath:com/bizon/sqlmap/persistence/mssql/*.xml"/>
+        <!--property name="mapperLocations" value="classpath:com/bizon/sqlmap/persistence/oracle/*.xml"/-->
+        <!--property name="mapperLocations" value="classpath:com/bizon/sqlmap/persistence/mysql/*.xml"/-->
+        <!--property name="mapperLocations" value="classpath:com/bizon/sqlmap/persistence/tibero/*.xml"/-->
         <property name="transactionFactory">
             <bean class="org.mybatis.spring.transaction.SpringManagedTransactionFactory"/>
         </property>
@@ -163,10 +177,11 @@ sbms.update.server.user.pwd=1Crm8LBRgjMCRmFbvv7YwA==
 
 # 3.서비스 등록
 
-%SBMS_HOME%\bin\installService.bat 파일을 수정 및 실행하여 SmartBillService를 윈도우 서비스에 등록한다.
+**%SBMS_HOME%\bin\installService.bat** 파일을 수정 및 실행하여 SmartBillService를 윈도우 서비스에 등록한다.
 
 ```bat
 set SERVICE_NAME=SmartBillService
+REM SBMS_DTI 설치 경로
 set SBMS_HOME=D:\smartbill\SBMS_DTI
 set SERVICE_PORT=30000
 set STOP_PORT=30001
@@ -182,6 +197,7 @@ set PR_STDERROR=%SBMS_HOME%\logs\ServiceErr.txt
 set PR_LOGLEVEL=Error
 
 REM Path to java installation
+REM jdk 설치 경로
 set PR_JVM=D:\smartbill\openjdk-1.7.0-u80\jre\bin\server\jvm.dll
 set PR_CLASSPATH=%SBMS_HOME%\app\ejetty.jar;%SBMS_HOME%\app\lib\*
  
@@ -213,7 +229,7 @@ exit
 
 
 
-%SBMS_HOME%\bin\SmartBillServicew.exe 을 실행하여 서비스를 Start하거나 윈도우 서비스에서 SmartBillService를 찾아서 실행한다.
+**%SBMS_HOME%\bin\SmartBillServicew.exe** 을 실행하여 서비스를 Start하거나 윈도우 서비스에서 SmartBillService를 찾아서 실행한다.
 
 ![image-20201209143158090](C:\Users\user\AppData\Roaming\Typora\typora-user-images\image-20201209143158090.png)
 
@@ -231,7 +247,7 @@ exit
 
 중계서버 기본페이지를 호출하여 스마트빌서버와 정상통신 여부 확인 및 DB 정상접속 여부를 확인한다.
 
-http://중계서버IP:포트/dti
+**http://중계서버IP:포트/dti**
 
 ![image-20201209144007049](C:\Users\user\AppData\Roaming\Typora\typora-user-images\image-20201209144007049.png)
 
@@ -241,7 +257,7 @@ http://중계서버IP:포트/dti
 
 중계서버 관리페이지에 로그인 후 DB 초기설정을 진행한다.
 
-http://중계서버ip:포트/manager (관리자 : sbms / sbms000)
+**http://중계서버ip:포트/manager (관리자 : sbms / sbms000)**
 
 ![image-20201209144202726](C:\Users\user\AppData\Roaming\Typora\typora-user-images\image-20201209144202726.png)
 
