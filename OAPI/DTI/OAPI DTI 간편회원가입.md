@@ -134,6 +134,8 @@
 
 > ### Y -> 스마트빌 아이디 로그인
 >
+> (기존 회원의 경우 관리자 ID로 로그인 해야만 요금제가 정상적으로 변경 됩니다.) 
+>
 > 데모 : http://demo.smartbill.co.kr/xMain/mb/shar_transfer/info_inpt03.aspx
 >
 > 운영 : http://www.smartbill.co.kr/xMain/mb/shar_transfer/info_inpt03.aspx
