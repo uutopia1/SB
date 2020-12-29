@@ -10,7 +10,9 @@
 
 # DTI SBMS 연동  진행 절차
 
-![image-20201222130053275](C:\Users\user\AppData\Roaming\Typora\typora-user-images\image-20201222130053275.png)
+![image-20201223101329827](C:\Users\user\AppData\Roaming\Typora\typora-user-images\image-20201223101329827.png)
+
+
 
 ## 1.스마트빌 회원가입
 
@@ -66,11 +68,11 @@ DB와 계정은 다른 시스템에 영향이 없도록 별도로 생성할 것�
 
 ## 4.중계서버(SBMS) 설치
 
-중계서버의 설치는 스마트빌에서 진행합니다.
+중계서버의 설치는 스마트빌에서 진행합니다. (해당 작업은 스마트빌 담당자가 진행 합니다.)
 
 외부망 접속이 가능한 경우 중계서버에서 설치작업이 가능하도록 원격접속을 지원해주시면 됩니다.
 
-원격접속 URL(https://rsup.net/smartbill)을 호출하여 안내 받은 번호로 연결하시면 됩니다.
+원격접속 URL(https://rsup.net/smartbill)을 호출하여 안내 받은 번호로 연결하면 원격접속 됩니다.
 
 ![image-20201222130832915](C:\Users\user\AppData\Roaming\Typora\typora-user-images\image-20201222130832915.png)
 
@@ -78,23 +80,29 @@ DB와 계정은 다른 시스템에 영향이 없도록 별도로 생성할 것�
 
 
 
-## 5.라우팅 등록
+## 5.라우팅 등록 및 통신 테스트
 
-설치완료 후 중계서버의 공인IP를 스마트빌서버에 등록하여 통신이 가능한 환경을 구축합니다.
-
-(해당 작업은 스마트빌 담당자가 진행 합니다.)
-
-
-
-
-
-## 6.통신 테스트
-
-DB, 스마트빌서버, 인증기관 등과 연결에 문제가 없는지 기본 통신 테스트를 진행합니다.
+설치완료 후 중계서버의 공인IP를 스마트빌서버에 등록하여 통신이 가능한 환경을 구축하고 DB, 스마트빌서버, 인증기관 등과 연결에 문제가 없는지 기본 통신 테스트를 진행합니다.
 
 (해당 작업은 스마트빌 담당자가 진행 합니다.)
 
 
+
+## 6.인증서 등록
+
+중계서버에 설치된 관리페이지(http://중계서버IP:PORT/manager )를 통해서 발행을 위한 인증서를 등록합니다.
+
+로그인 계정 : sbmsuser / sbmsuser000 (사용자)
+
+![image-20201223100726992](C:\Users\user\AppData\Roaming\Typora\typora-user-images\image-20201223100726992.png)
+
+공인인증서의 공개키(signCert.der), 개인키(signPri.key) 파일을 직접 등록해야 하며 인증기관에서 인증서를 사용자 PC의 로컬디스크(C:)에 저장할 경우 기본적으로 아래 두 경로 중 하나에 자동으로 저장되며 폴더안에 있는 공개키, 개인키 파일을 등록해 주시면 됩니다.
+
+C:\Program Files\NPKI\인증기관명\USER\‌
+
+C:\Users\사용자명\AppData\LocalLow\NPKI\인증기관명\USER\‌
+
+ex. C:\Program Files\NPKI\KICA\USER\cn=한정인(법인),ou=센터RA,ou=KICA고객센터,ou=등록기관,ou=licensedCA,o=KICA,c=KR\
 
 
 
@@ -107,8 +115,6 @@ DB, 스마트빌서버, 인증기관 등과 연결에 문제가 없는지 기본
 
 
 모든 테스트가 완료되면 운영 이관 후 시스템을 오픈 합니다.
-
-
 
 
 
