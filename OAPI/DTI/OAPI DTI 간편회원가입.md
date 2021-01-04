@@ -1,5 +1,9 @@
 [TOC]
 
+
+
+
+
 # 간편 회원 가입 연동이란?
 
 스마트빌의 Open API 서비스를 사용하기 위해서는 스마트빌 포탈에 회원가입 후 인증코드, 인증토큰, 인증서등록, 요금제변경 등, 연동등록 등 사전절차가 필요합니다.
@@ -10,22 +14,22 @@
 
 ‌
 
+
+
+
+
 # 간편 회원 가입 연동을 위한 사전 절차
 
+### **방화벽 오픈**
 
-
-## **방화벽 오픈**
-
-### **회원가입 정보 전달 (default)**
+#### **회원가입 정보 전달 (default)**
 
 | **프로토콜** | **출발지 소스**    | **허용 포트** | **목적지 소스**                                              | **메모** |
 | ------------ | ------------------ | ------------- | ------------------------------------------------------------ | -------- |
-| TCP          | Application Server | 80            | [ht](http://demo.smartbill.co.kr/xMain/mb/shar_transfer/info_inpt01.aspx)tp://demo.smartbill.co.kr/xMain/mb/shar*transfer/info_inpt*01.aspx | 데모     |
-| TCP          | Application Server | 80            | http://www.smartbill.co.kr/xMain/mb/shar*transfer/info_*inpt01.aspx | 운영     |
+| TCP          | Application Server | 80            | http://demo.smartbill.co.kr/xMain/mb/shar_transfer/info_inpt01.aspx | 데모     |
+| TCP          | Application Server | 80            | http://www.smartbill.co.kr/xMain/mb/shar_transfer/info_inpt01.aspx | 운영     |
 
-
-
-### 회원가입 결과 call back(동기화)을 원할 경우 (option)
+#### 회원가입 결과 call back(동기화)을 원할 경우 (option)
 
 | **프로토콜** | **출발지 소스** | **허용 포트** | **목적지 소스**    | **메모** |
 | ------------ | --------------- | ------------- | ------------------ | -------- |
@@ -36,15 +40,21 @@
 
 ‌
 
+
+
+
+
 # 연동 프로세스
 
-![img](https://gblobscdn.gitbook.com/assets%2F-MMmhRTm3PcrZFZCUXBE%2F-MMnQsmlkiuTEDUSdyiD%2F-MMnX8hiTW6pwmXIlucH%2Fimage.png?alt=media&token=2e075017-f82e-456a-8725-d9c587771f26)
+![image-20201230092746146](C:\Users\user\AppData\Roaming\Typora\typora-user-images\image-20201230092746146.png)
 
 
 
-## REQUEST
+## 1.기본정보 전송
 
-### URL
+스마트빌 간편회원가입 연동 페이지로 사업자번호, 연계코드, ERP사용자ID 등 정보를 전송합니다.
+
+#### URL
 
 **POST** /xMain/mb/shar*transfer/info*inpt01.aspx **HTTP/1.1**
 
@@ -52,29 +62,27 @@
 
 **Content-type :** application/x-www-form-urlencoded; charset=utf-8
 
-
-
-### Parameter
+#### Parameter
 
 | Name           | Type(max)   | Description    | Required |
 | -------------- | ----------- | -------------- | -------- |
 | pComRegNo      | String(10)  | 사업자번호     | O        |
-| pComName       | String(200) | 회사명         | X        |
-| pComPresident  | String(100) | 대표자명       | X        |
-| pComBizStatus  | String(100) | 업태           | X        |
-| pComBizClass   | String(100) | 종목           | X        |
-| pZipCode       | String(5)   | 우편번호       | X        |
-| pComAddress    | String(300) | 주소           | X        |
+| pComName       | String(200) | 회사명         | O        |
+| pComPresident  | String(100) | 대표자명       | O        |
+| pComBizStatus  | String(100) | 업태           | O        |
+| pComBizClass   | String(100) | 종목           | O        |
+| pZipCode       | String(5)   | 우편번호       | O        |
+| pComAddress    | String(300) | 주소           | O        |
 | pMIGRATIONFLAG | String(50)  | 회원연계코드   | O        |
-| pMemName       | String(100) | 이름           | X        |
-| pMemTel        | String(40)  | 연락처(-포함)  | X        |
+| pMemName       | String(100) | 이름           | O        |
+| pMemTel        | String(40)  | 연락처(-포함)  | O        |
 | pMemHP         | String(40)  | 휴대폰(-포함)  | X        |
 | pMemFax        | String(40)  | 팩스(-포함)    | X        |
-| pMemEmail      | String(100) | 이메일         | X        |
-| pMasterYN      | String(1)   | 기업관리자여부 | X        |
-| pID            | String(50)  | 사용자 ID      | X        |
+| pMemEmail      | String(100) | 이메일         | O        |
+| pMasterYN      | String(1)   | 기업관리자여부 | O        |
+| pID            | String(50)  | ERP 사용자 ID  | O        |
 
-### Sample
+#### Sample
 
 ```html
 <html>
@@ -106,15 +114,13 @@
 
 
 
-## RESPONSE
+## 2.기본정보 확인, 본인인증, 약관동의
+
+전송한 정보가 자동 입력된 상태로 회사정보 확인 페이지가 호출됩니다. 회사정보를 확인 후 본인인증, 약관동의를 진행합니다.
 
 **HTTP/1.1** 200 OK
 
 **Contet-Type :** text/html; charset=utf-8
-
-
-
-### ① 회사정보 입력, 본인 인증, 약관 동의
 
 데모 : http://demo.smartbill.co.kr/xMain/mb/shar_transfer/info_inpt01.aspx
 
@@ -122,124 +128,131 @@
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-MMmhRTm3PcrZFZCUXBE%2F-MMnQsmlkiuTEDUSdyiD%2F-MMnaFO154gsUM-vGO14%2Fimage.png?alt=media&token=353d3406-4386-4a9e-881a-5dd3ab9f2c3b)
 
-
-
 데모 : http://demo.smartbill.co.kr/xMain/mb/shar_transfer/info_inpt02.aspx
 
 운영 : http://www.smartbill.co.kr/xMain/mb/shar_transfer/info_inpt02.aspx
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-MMmhRTm3PcrZFZCUXBE%2F-MMnQsmlkiuTEDUSdyiD%2F-MMnfcv4Fau7h-OCAohM%2Fimage.png?alt=media&token=e8cddc5b-2bbd-4b1b-9b43-5f75895d0454)
 
-### **기회원 여부** (Y or N)
-
-> ### Y -> 스마트빌 아이디 로그인
->
-> (기존 회원의 경우 관리자 ID로 로그인 해야만 요금제가 정상적으로 변경 됩니다.) 
->
-> 데모 : http://demo.smartbill.co.kr/xMain/mb/shar_transfer/info_inpt03.aspx
->
-> 운영 : http://www.smartbill.co.kr/xMain/mb/shar_transfer/info_inpt03.aspx
->
-> ![img](https://gblobscdn.gitbook.com/assets%2F-MMmhRTm3PcrZFZCUXBE%2F-MMnQsmlkiuTEDUSdyiD%2F-MMnh72P8lNs-Fya2epk%2Fimage.png?alt=media&token=877d0eef-71b1-4929-b807-5ad40b2847b7)
->
-> 
->
-> ### N -> ②신규 회원 가입
->
-> 데모 : http://demo.smartbill.co.kr/xMain/mb/shar_transfer/info_inpt03.aspx 
->
-> 운영 : http://www.smartbill.co.kr/xMain/mb/shar_transfer/info_inpt03.aspx 
->
-> ![img](https://gblobscdn.gitbook.com/assets%2F-MMmhRTm3PcrZFZCUXBE%2F-MMnQsmlkiuTEDUSdyiD%2F-MMnm2J3P-wIzaziqtUS%2Fimage.png?alt=media&token=ced5b8dd-4109-492e-b764-9e4c548d2366)
->
 
 
+> ### **기회원 여부** (Y or N)
+> ### Y ->
 
-### 동기화 여부 (call back URL 연동) (Y or N)
+## 3-1.스마트빌 로그인
 
-> ### Y -> 동기화
->
-> #### 회원가입 정보, 인증코드, 인증토큰 call back (to call back URL)
->
-> **HTTP/1.1** 200 OK
->
-> **Contet-Type :** application/json; charset=utf-8
->
-> 
->
-> #### Parameter
->
-> | Name          | Type(max) | Description    | Required |
-> | ------------- | --------- | -------------- | -------- |
-> | USER_SBID     | String    | 스마트빌 ID    | O        |
-> | USER_NAME     | String    | 담당자명       | X        |
-> | USER_EMAIL    | String    | 담당이메일주소 | X        |
-> | USER_PHONE    | String    | 담당핸드폰번호 | X        |
-> | COM_REGNO     | String    | 사업자번호     | O        |
-> | COM_NAME      | String    | 회사명         | X        |
-> | COM_PRESIDENT | String    | 회대표자명     | X        |
-> | COM_ADDRESS   | String    | 회사주소       | X        |
-> | regYN         | String    | 관리자여부     | X        |
-> | AUTH_CODE     | String    | 인증코드       | O        |
-> | AUTH_TOKEN    | String    | 인증토큰       | O        |
->
-> 
->
-> #### Sample
->
-> ```
-> {"COM_REGNO":"1111111111", 
->  "AUTH_TOKEN":"cnV0Qnp1VjlrZUJuS0OteFZCanU3MkR2bUhRelFTR0hdNVJ5YnZCS0pZdWhpVURBMFQ0R2hkc0FUMVJFelV6MAo=", 
->  "USER_PHONE":"", 
->  "AUTH_CODE":"13F89DFEK99D4474A67EABE8F7258AA5", 
->  "COM_NAME":"", 
->  "USER_EMAIL":"", 
->  "USER_SBID":"test1", 
->  "COM_ADDRESS":"", 
->  "USER_NAME":"", 
->  "regYn":"", 
->  "COM_PRESIDENT":""}
-> ```
->
-> 
->
-> #### ④공인인증서 등록
->
-> 데모 : http://demo.smartbill.co.kr/xMain/mb/mb_join/vendor_join_cplt.aspx
->
-> 운영 : http://www.smartbill.co.kr/xMain/mb/mb_join/vendor_join_cplt.aspx
->
-> ![img](https://gblobscdn.gitbook.com/assets%2F-MMmhRTm3PcrZFZCUXBE%2F-MMnQsmlkiuTEDUSdyiD%2F-MMniQsVP5MYp3Y61nAL%2Fimage.png?alt=media&token=5bbc4c21-7bac-43d2-bdce-d339c87abd0e)
->
-> Enter a caption for this image (optional)
->
-> 
->
-> 
->
-> ### N ->직접발급
->
-> #### ③인증코드 생성, 인증토큰 발급
->
-> #### ④공인인증서 등록
->
-> 데모 : http://demo.smartbill.co.kr/xMain/mb/mb_join/vendor_join_cplt.aspx
->
-> 운영 : http://www.smartbill.co.kr/xMain/mb/mb_join/vendor_join_cplt.aspx
->
-> ![img](https://gblobscdn.gitbook.com/assets%2F-MMmhRTm3PcrZFZCUXBE%2F-MMnQsmlkiuTEDUSdyiD%2F-MMniQsVP5MYp3Y61nAL%2Fimage.png?alt=media&token=5bbc4c21-7bac-43d2-bdce-d339c87abd0e)
->
+기존 회원인 경우 별도의 신규 가입 절차 없이 기존 ID로 로그인 후 연동이 가능합니다.
+
+(관리자 ID로 로그인 해야만 요금제가 정상적으로 변경 됩니다.) 
+
+데모 : http://demo.smartbill.co.kr/xMain/mb/shar_transfer/info_inpt03.aspx
+
+운영 : http://www.smartbill.co.kr/xMain/mb/shar_transfer/info_inpt03.aspx
+
+![img](https://gblobscdn.gitbook.com/assets%2F-MMmhRTm3PcrZFZCUXBE%2F-MMnQsmlkiuTEDUSdyiD%2F-MMnh72P8lNs-Fya2epk%2Fimage.png?alt=media&token=877d0eef-71b1-4929-b807-5ad40b2847b7)
+
+> ### N -> 
+
+## 3-2.스마트빌 회원 가입
+
+신규 회원인 경우 회원가입을 진행합니다. 전송한 정보가 자동으로 입력됩니다.
+
+데모 : http://demo.smartbill.co.kr/xMain/mb/shar_transfer/info_inpt03.aspx 
+
+운영 : http://www.smartbill.co.kr/xMain/mb/shar_transfer/info_inpt03.aspx 
+
+![img](https://gblobscdn.gitbook.com/assets%2F-MMmhRTm3PcrZFZCUXBE%2F-MMnQsmlkiuTEDUSdyiD%2F-MMnm2J3P-wIzaziqtUS%2Fimage.png?alt=media&token=ced5b8dd-4109-492e-b764-9e4c548d2366)
 
 
 
+> ### 동기화 여부 (Y or N)
+> ### Y -> 
+
+## 4-1.인증코드생성, 인증토큰발급 call back
+
+동기화 할 경우 회원가입이 완료되면 미리 정의한 고객사의 call back page로 정보가 전송됩니다.
+
+고객사는 정보를 수신받을 callback page를 미리 개발하여 리스너 역할로 동작하고 있어야 하고, 전송받은 정보는 별도로 관리가 필요합니다.
+
+**HTTP/1.1** 200 OK
+
+**Contet-Type :** application/json; charset=utf-8
+
+#### Parameter
+
+| Name       | Type(max) | Description|
+| ---------- | --------- | ---------------- |
+| pID        | String    | ERP 사용자ID|
+| SBID       | String    | 스마트빌 ID|
+| Email      | String    | 담당자이메일주소|
+| COM_REGNO  | String    | 사업자번호|
+| regYN      | String    | 동기화여부|
+| AUTH_CODE  | String    | 인증코드|
+| AUTH_TOKEN | String    | 인증토큰|
+
+#### Sample
+
+```
+{
+"COM_REGNO":"1111111111",
+"AUTH_TOKEN":"cnV0Qnp1VjlrZUJuS0OteFZCanU3MkR2bUhRelFTR0hdNVJ5YnZCS0pZdWhpVURBMFQ0R2hkc0FUMVJFelV6MAo=",
+"AUTH_CODE":"13F89DFEK99D4474A67EABE8F7258AA5",
+"Email":"test@test.com",
+"pID":"test",
+"SBID":"test1",
+"regYn":"Y"
+}
+```
 
 
-‌
 
-> 인증코드, 인증토큰 동기화 과정에서 예기치 못한 오류가 발생하거나 인증서 등록, 갱신이 필요한 경우 아래 방법으로 별도로 진행해야 합니다.‌
->
+## 5.공인인증서 등록
 
-# 1. 인증코드 생성
+callback 후 인증서를 등록하는 페이지가 호출됩니다.
+
+**HTTP/1.1** 200 OK
+
+**Contet-Type :** application/json; charset=utf-8
+
+데모 : http://demo.smartbill.co.kr/xMain/mb/shar_transfer/info_inpt04.aspx
+
+운영 : http://www.smartbill.co.kr/xMain/mb/shar_transfer/info_inpt04.aspx
+
+![image-20201230084249171](C:\Users\user\AppData\Roaming\Typora\typora-user-images\image-20201230084249171.png)
+
+
+
+> ### N ->
+
+## 4-2.인증코드 생성, 인증토큰 발급
+
+## 5.공인인증서 등록
+
+동기화하지 않을 경우 인증코드생성, 인증토큰발급, 공인인증서등록이 가능한 페이지가 호출됩니다.
+
+해당 페이지에서 정상적으로 처리하지 못한 경우 추가 프로세스의 진행이 필요합니다.
+
+데모 : http://demo.smartbill.co.kr/xMain/mb/mb_join/vendor_join_cplt.aspx
+
+운영 : http://www.smartbill.co.kr/xMain/mb/mb_join/vendor_join_cplt.aspx
+
+![img](https://gblobscdn.gitbook.com/assets%2F-MMmhRTm3PcrZFZCUXBE%2F-MMnQsmlkiuTEDUSdyiD%2F-MMniQsVP5MYp3Y61nAL%2Fimage.png?alt=media&token=5bbc4c21-7bac-43d2-bdce-d339c87abd0e)
+
+
+
+
+
+
+
+
+
+# ‌추가 프로세스
+
+인증코드, 인증토큰 동기화 과정에서 예기치 못한 오류가 발생하거나 등록 페이지에서 정상적으로 처리하지 못한경우, 혹은 인증서 등록, 갱신이 필요한 경우 스마트빌 홈페이지에 로그인 후 별도로 페이지를 호출하여 진행해야 합니다.
+
+
+
+## 1.인증코드 생성
 
 데모 : http://demo.smartbill.co.kr/xMain/openapi/get_auth_code.aspx‌
 
@@ -251,7 +264,7 @@
 
 ‌
 
-# 2. 인증토큰 발급
+## 2.인증토큰 발급
 
 데모 : http://demo.smartbill.co.kr/xMain/openapi/get_auth_token.aspx
 
@@ -263,7 +276,7 @@
 
 ‌
 
-# 3. 인증서 등록
+## 3.인증서 등록
 
 데모 : http://demo.smartbill.co.kr/xMain/openapi/set_cert_info.aspx‌
 
